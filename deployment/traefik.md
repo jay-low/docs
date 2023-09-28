@@ -17,13 +17,13 @@ A few points to note:
 * `--providers.docker` Tells Træfik to listen on Docker Api  
 * `labels:` Key for Træfik configuration into Docker integration
 
-  ```yaml
-  services:
-  #  ...
-    api:
-      labels:
-        - traefik.http.routers.api.rule=Host(`api.localhost`)
-  ```
+```yaml
+services:
+#  ...
+  api:
+    labels:
+      - traefik.http.routers.api.rule=Host(`api.localhost`)
+```
 
   The API DNS will be specified with ``traefik.http.routers.api.rule=Host(`your.host`)`` (here api.localhost)
 * `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored

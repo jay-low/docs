@@ -23,9 +23,9 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-   For example, having a filter service declaration in `services.yaml`:
+For example, having a filter service declaration in `services.yaml`:
 
-    ```yaml
+```yaml
     # api/config/services.yaml
     services:
         # ...
@@ -38,97 +38,97 @@ to a Resource in two ways:
             autowire: false
             autoconfigure: false
             public: false
-    ```
+```
 
-    Alternatively, you can choose to use a dedicated file to gather filters together:
+Alternatively, you can choose to use a dedicated file to gather filters together:
 
-    ```yaml
-    # api/config/filters.yaml
-    services:
-        offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
-    ```
+```yaml
+# api/config/filters.yaml
+services:
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
+```
 
-   We're linking the filter `offer.date_filter` with the resource like this:
+We're linking the filter `offer.date_filter` with the resource like this:
 
-   [codeSelector]
+[codeSelector]
 
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-    #[ApiResource(filters: ['offer.date_filter'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
+#[ApiResource(filters: ['offer.date_filter'])]
+class Offer
+{
+    // ...
+}
+```
 
-    ```yaml
-    # api/config/api_platform/resources.yaml
-    resources:
-        App\Entity\Offer:
-            operations:
-                ApiPlatform\Metadata\GetCollection:
-                    filters: ['offer.date_filter']
-            # ...
-    ```
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Offer:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                filters: ['offer.date_filter']
+        # ...
+```
 
-    ```xml
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <!-- api/config/api_platform/resources.xml -->
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
 
-    <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-            https://api-platform.com/schema/metadata/resources-3.0.xsd">
-        <resource class="App\Entity\Offer">
-            <operations>
-                <operation class="ApiPlatform\Metadata\GetCollection">
-                    <filters>
-                        <filter>offer.date_filter</filter>
-                    </filters>
-                </operation>
-                <!-- ... -->
-            </operations>
-        </resource>
-    </resources>
-    ```
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Offer">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection">
+                <filters>
+                    <filter>offer.date_filter</filter>
+                </filters>
+            </operation>
+            <!-- ... -->
+        </operations>
+    </resource>
+</resources>
+```
 
-   [/codeSelector]
+[/codeSelector]
 
 2. By using the `#[ApiFilter]` attribute.
 
-   This attribute automatically declares the service, and you just have to use the filter class you want:
+This attribute automatically declares the service, and you just have to use the filter class you want:
 
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiFilter;
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
-    #[ApiResource]
-    #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
+class Offer
+{
+    // ...
+}
+```
 
-   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
+Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
-   For the sake of consistency, we're using the attribute in the below documentation.
+For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
-   services all begin with `api_platform.doctrine_mongodb.odm`.
+For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
+services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
